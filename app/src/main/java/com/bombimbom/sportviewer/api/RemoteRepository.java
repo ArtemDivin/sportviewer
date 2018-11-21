@@ -1,9 +1,7 @@
 package com.bombimbom.sportviewer.api;
 
 
-import com.bombimbom.sportviewer.model.About;
-import com.bombimbom.sportviewer.model.Events;
-import com.bombimbom.sportviewer.model.Item;
+import com.bombimbom.sportviewer.model.Lesson;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RemoteRepository {
-    private final static String BASE_URL = " http://mikonatoruri.win/";
+    private final static String BASE_URL = "https://sample.fitnesskit-admin.ru/";
     private Api api;
     private static RemoteRepository instance;
 
@@ -28,13 +26,7 @@ public class RemoteRepository {
     }
 
     private RemoteRepository() {
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okClient = new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build();
+        OkHttpClient okClient = UnsafeOkhttpClient.getUnsafeOkHttpClient();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -46,18 +38,8 @@ public class RemoteRepository {
         this.api = retrofit.create(Api.class);
     }
 
-    public Flowable<Resource<List<Events>>> getEventsResourceByCategory(String category) {
-        return api.getEvents(category)
-                .map(Item::getEvents)
-                .map(Resource::success)
-                .startWith(Resource.loading(null))
-                .onErrorReturn(Resource::error)
-                .subscribeOn(Schedulers.io());
-
-    }
-
-    public Flowable<Resource<About>> getArticle(String urlAbout) {
-        return api.getArticle(urlAbout)
+    public Flowable<Resource<List<Lesson>>> getLesson() {
+        return api.getLesson()
                 .map(Resource::success)
                 .startWith(Resource.loading(null))
                 .onErrorReturn(Resource::error)

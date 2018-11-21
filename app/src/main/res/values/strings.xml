@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SportViewer</string>
+    <string name="app_name">SuperGYM</string>
     <string name="button_ok">Ok</string>
     <string name="error_message">Произошла ошибка</string>
 </resources>
